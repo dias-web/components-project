@@ -36,7 +36,6 @@ $container = $containerBuilder->build();
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/', ['App\controllers\UserController', 'index']);
 
-
 });
 
 // Fetch method and URI from somewhere
