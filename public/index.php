@@ -19,12 +19,11 @@ $containerBuilder->addDefinitions([
     PDO::class => function() {
         $driver = 'mysql';
         $host = 'localhost';
-        $database_name = 'mindset';
+        $database_name = 'components';
         $username = 'root';
         $password = '';
 
         return new PDO("$driver:host=$host;dbname=$database_name", $username, $password);
-
     },
 
     Auth::class => function($container) {
@@ -35,6 +34,10 @@ $container = $containerBuilder->build();
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/', ['App\controllers\UserController', 'index']);
+    $r->addRoute('GET', '/login', ['App\controllers\LoginController', 'showLoginPage']);
+    $r->addRoute('POST', '/login', ['App\controllers\LoginController', 'login']);
+    $r->addRoute('GET', '/register', ['App\controllers\RegisterController', 'showRegisterPage']);
+    $r->addRoute('POST', '/register', ['App\controllers\RegisterController', 'registerUser']);
 
 });
 

@@ -10,6 +10,6 @@ class UserController
     {
         $templates = new Engine('../app/views');
 
-        echo $templates->render('edit');
+        echo $templates->render('users');
     }
 }

@@ -17,7 +17,7 @@
     <a class="navbar-brand d-flex align-items-center fw-500" href="users.html"><img alt="logo"
                                                                                     class="d-inline-block align-top mr-2"
                                                                                     src="../../public/img/logo.png">
-        Учебный проект</a>
+        Garyshker 24</a>
     <button aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
             data-target="#navbarColor02" data-toggle="collapse" type="button"><span class="navbar-toggler-icon"></span>
     </button>
@@ -29,9 +29,6 @@
         </ul>
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="page_login.html">Войти</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="#">Выйти</a>
             </li>
         </ul>
@@ -42,12 +39,12 @@
 
 <footer class="page-footer" role="contentinfo">
     <div class="d-flex align-items-center flex-1 text-muted">
-        <span class="hidden-md-down fw-700">2020 © Учебный проект</span>
+        <span class="hidden-md-down fw-700">2023 © Liverpool</span>
     </div>
     <div>
         <ul class="list-table m-0">
-            <li><a href="intel_introduction.html" class="text-secondary fw-700">Home</a></li>
-            <li class="pl-3"><a href="info_app_licensing.html" class="text-secondary fw-700">About</a></li>
+            <li><a href="#" class="text-secondary fw-700">Home</a></li>
+            <li class="pl-3"><a href="#" class="text-secondary fw-700">About</a></li>
         </ul>
     </div>
 </footer>
