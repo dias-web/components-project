@@ -36,6 +36,7 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/', ['App\controllers\UserController', 'index']);
     $r->addRoute('GET', '/login', ['App\controllers\LoginController', 'showLoginPage']);
     $r->addRoute('POST', '/login', ['App\controllers\LoginController', 'login']);
+    $r->addRoute('GET', '/logout', ['App\controllers\LogOutController', 'logout']);
     $r->addRoute('GET', '/register', ['App\controllers\RegisterController', 'showRegisterPage']);
     $r->addRoute('POST', '/register', ['App\controllers\RegisterController', 'registerUser']);
 

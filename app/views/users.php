@@ -1,4 +1,12 @@
-<?php $this->layout('layout') ?>
+<?php
+
+$this->layout('layout');
+
+if( !session_id() ) {
+    session_start();
+}
+
+?>
 
 <main id="js-page-content" role="main" class="page-content mt-3">
     <div class="alert alert-success">

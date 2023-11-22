@@ -1,3 +1,10 @@
+<?php
+if( !session_id() ) {
+    session_start();
+}
+
+use function Tamtamchik\SimpleFlash\flash;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -59,9 +66,7 @@
                             </div>
                             <div class="col-xl-6 ml-auto mr-auto">
                                 <div class="card p-4 rounded-plus bg-faded">
-                                    <div class="alert alert-danger text-dark" role="alert">
-                                        <strong>Уведомление!</strong> Этот эл. адрес уже занят другим пользователем.
-                                    </div>
+                                    <?= flash()->display('error') ?? '' ?>
                                     <form id="js-login" novalidate="" action="/register" method="post">
                                         <div class="form-group">
                                             <label class="form-label" for="emailverify">Email</label>
