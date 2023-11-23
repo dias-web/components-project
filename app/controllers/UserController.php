@@ -13,7 +13,7 @@ class UserController
     {
         $this->auth = $auth;
     }
-    public function index()
+    public function index(): void
     {
         if (!$this->auth->isLoggedIn()) {
             flash()->error('Требуется авторизация!');
