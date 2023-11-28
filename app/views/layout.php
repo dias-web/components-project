@@ -14,7 +14,7 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary bg-primary-gradient">
-    <a class="navbar-brand d-flex align-items-center fw-500" href="users.html"><img alt="logo"
+    <a class="navbar-brand d-flex align-items-center fw-500" href="/"><img alt="logo"
                                                                                     class="d-inline-block align-top mr-2"
                                                                                     src="../../public/img/logo.png">
         Garyshker 24</a>

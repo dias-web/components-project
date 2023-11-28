@@ -18,14 +18,14 @@ class LoginController
         $this->auth = $auth;
     }
 
-    public function showLoginPage(): void
+    public function showLoginPage()
     {
         $templates = new Engine('../app/views');
 
         echo $templates->render('login');
     }
 
-    public function login(): void
+    public function login()
     {
         try {
             $email = $_POST['email'];

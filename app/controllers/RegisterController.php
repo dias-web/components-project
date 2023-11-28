@@ -17,14 +17,14 @@ class RegisterController
     {
         $this->auth = $auth;
     }
-    public function showRegisterPage(): void
+    public function showRegisterPage()
     {
         $templates = new Engine('../app/views');
 
         echo $templates->render('register');
     }
 
-    public function registerUser(): void
+    public function registerUser()
     {
         try {
             $email = $_POST['email'];

@@ -1,21 +1,31 @@
 <?php
 
 global $container;
+
+use App\models\QueryBuilder;
+use Delight\Auth\Auth;
+use function Tamtamchik\SimpleFlash\flash;
+
 $this->layout('layout');
 
 if (!session_id()) {
     session_start();
 }
 
-$qb = $container->get(\App\models\QueryBuilder::class);
-$users = $qb->getAll('users');
+try {
+    $qb = $container->get(QueryBuilder::class);
+    $auth = $container->get(Auth::class);
+} catch (\DI\DependencyException $e) {
+} catch (\DI\NotFoundException $e) {
+}
+$users = $qb->getAll('users', 'users_profile');
+
+$currentUserId = $auth->getUserId();
 
 ?>
 
 <main id="js-page-content" role="main" class="page-content mt-3">
-    <div class="alert alert-success">
-        Профиль успешно обновлен.
-    </div>
+    <?= flash()->display('success') ?? '' ?>
     <div class="subheader">
         <h1 class="subheader-title">
             <i class='subheader-icon fal fa-users'></i> Список пользователей
@@ -23,8 +33,9 @@ $users = $qb->getAll('users');
     </div>
     <div class="row">
         <div class="col-xl-12">
-            <a class="btn btn-success" href="create_user.html">Добавить</a>
-
+            <?php if ($auth->hasRole(\Delight\Auth\Role::ADMIN)): ?>
+                <a class="btn btn-success" href="/create">Добавить</a>
+            <?php endif; ?>
             <div class="border-faded bg-faded p-3 mb-g d-flex mt-3">
                 <input type="text" id="js-filter-contacts" name="filter-contacts"
                        class="form-control shadow-inset-2 form-control-lg" placeholder="Найти пользователя">
@@ -43,7 +54,8 @@ $users = $qb->getAll('users');
     <div class="row" id="js-contacts">
         <?php foreach ($users as $user): ?>
             <div class="col-xl-4">
-                <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover" data-filter-tags="<?= $user['username'] ?>">
+                <div id="c_1" class="card border shadow-0 mb-g shadow-sm-hover"
+                     data-filter-tags="<?= $user['username'] ?>">
                     <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
                         <div class="d-flex flex-row align-items-center">
                                 <span class="status status-success mr-3">
@@ -54,11 +66,16 @@ $users = $qb->getAll('users');
                                 <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info"
                                    data-toggle="dropdown" aria-expanded="false">
                                     <?= $user['username'] ?>
+                                    <?php if ($auth->hasRole(\Delight\Auth\Role::ADMIN)
+                                        || $currentUserId == $user['id']): ?>
                                     <i class="fal fas fa-cog fa-fw d-inline-block ml-1 fs-md"></i>
                                     <i class="fal fa-angle-down d-inline-block ml-1 fs-md"></i>
+                                    <?php endif; ?>
                                 </a>
+                                <?php if ($auth->hasRole(\Delight\Auth\Role::ADMIN)
+                                    || $currentUserId == $user['id']): ?>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="edit.html">
+                                    <a class="dropdown-item" href="/edit/<?= $user['id']?>">
                                         <i class="fa fa-edit"></i>
                                         Редактировать</a>
                                     <a class="dropdown-item" href="security.html">
@@ -76,7 +93,8 @@ $users = $qb->getAll('users');
                                         Удалить
                                     </a>
                                 </div>
-                                <span class="text-truncate text-truncate-xl">IT Director, Gotbootstrap Inc.</span>
+                                <?php endif; ?>
+                                <span class="text-truncate text-truncate-xl"><?= $user['job'] ?></span>
                             </div>
                             <button class="js-expand-btn btn btn-sm btn-default d-none" data-toggle="collapse"
                                     data-target="#c_1 > .card-body + .card-body" aria-expanded="false">
@@ -93,7 +111,7 @@ $users = $qb->getAll('users');
                                class="mt-1 d-block fs-sm fw-400 text-dark">
                                 <i class="fas fa-mouse-pointer text-muted mr-2"></i><?= $user['email'] ?></a>
                             <address class="fs-sm fw-400 mt-4 text-muted">
-                                <i class="fas fa-map-pin mr-2"></i> 15 Charist St, Detroit, MI, 48212, USA
+                                <i class="fas fa-map-pin mr-2"></i><?= $user['address'] ?>
                             </address>
                             <div class="d-flex flex-row">
                                 <a href="javascript:void(0);" class="mr-2 fs-xxl" style="color:#4680C2">
