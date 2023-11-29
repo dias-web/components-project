@@ -34,6 +34,7 @@ class ComposerStaticInita1edcba4ad68130e7e1d6d5960a97a57
         'I' => 
         array (
             'Invoker\\' => 8,
+            'Imagine\\' => 8,
         ),
         'F' => 
         array (
@@ -79,6 +80,10 @@ class ComposerStaticInita1edcba4ad68130e7e1d6d5960a97a57
         'Invoker\\' => 
         array (
             0 => __DIR__ . '/..' . '/php-di/invoker/src',
+        ),
+        'Imagine\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/imagine/imagine/src',
         ),
         'FastRoute\\' => 
         array (

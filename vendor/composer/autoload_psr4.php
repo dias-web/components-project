@@ -12,6 +12,7 @@ return array(
     'Laravel\\SerializableClosure\\' => array($vendorDir . '/laravel/serializable-closure/src'),
     'Kint\\' => array($vendorDir . '/kint-php/kint/src'),
     'Invoker\\' => array($vendorDir . '/php-di/invoker/src'),
+    'Imagine\\' => array($vendorDir . '/imagine/imagine/src'),
     'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
     'Delight\\Http\\' => array($vendorDir . '/delight-im/http/src'),
     'Delight\\Db\\' => array($vendorDir . '/delight-im/db/src'),

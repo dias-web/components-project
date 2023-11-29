@@ -2,6 +2,7 @@
 
 namespace App\controllers;
 
+use App\models\AvatarUploader;
 use App\models\QueryBuilder;
 use Delight\Auth\Auth;
 use Delight\Auth\InvalidEmailException;
@@ -68,23 +69,28 @@ class UserController
             $job = $_POST['job'];
             $address = $_POST['address'];
             $status = $_POST['status'];
-            //$avatar = $_POST['avatar'];
             $vk = $_POST['vk'];
             $tg = $_POST['tg'];
             $insta = $_POST['insta'];
 
             $userId = $this->auth->register($email, $password, $username);
 
-            $this->queryBuilder->insert('users_profile', [
-                'user_id' => $userId,
-                'job' => $job,
-                'phone' => $phone,
-                'address' => $address,
-                'status' => $status,
-                'vk' => $vk,
-                'tg' => $tg,
-                'insta' => $insta
-            ]);
+            if (isset($_FILES['image'])) {
+                $avatarUploader = new AvatarUploader();
+                $avatarFilename = $avatarUploader->upload($_FILES['image']);
+
+                $this->queryBuilder->insert('users_profile', [
+                    'user_id' => $userId,
+                    'job' => $job,
+                    'phone' => $phone,
+                    'address' => $address,
+                    'status' => $status,
+                    'vk' => $vk,
+                    'tg' => $tg,
+                    'insta' => $insta,
+                    'avatar' => $avatarFilename
+                ]);
+            }
 
             flash()->success('Пользователь успешно добавлен!');
             header('Location: /');
@@ -97,6 +103,8 @@ class UserController
             flash()->error('Такой пользователь уже существует!');
         } catch (TooManyRequestsException) {
             flash()->error('Слишком много запросов. Пожалуйста, повторите попытку позже.');
+        } catch (\Exception $e) {
+            flash()->error('Ошибка при загрузке файла: ' . $e->getMessage());
         }
         header('Location: /create');
         exit();

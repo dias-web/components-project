@@ -58,9 +58,16 @@ $currentUserId = $auth->getUserId();
                      data-filter-tags="<?= $user['username'] ?>">
                     <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
                         <div class="d-flex flex-row align-items-center">
-                                <span class="status status-success mr-3">
-                                    <span class="rounded-circle profile-image d-block "
-                                          style="background-image:url('img/demo/avatars/avatar-b.png'); background-size: cover;"></span>
+                                <span class="status status-<?php if($user['status'] === 'online') {
+                                    echo 'success';
+                                } elseif ($user['status'] === 'away') {
+                                    echo 'warning';
+                                } else {
+                                    echo 'danger';
+                                }
+                                ?> mr-3">
+                                    <span class="rounded-circle profile-image d-block"
+                                          style="background-image:url('/uploads/<?= $user['avatar'] ?>'); background-size: cover;"></span>
                                 </span>
                             <div class="info-card-text flex-1">
                                 <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info"
