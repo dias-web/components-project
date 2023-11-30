@@ -16,6 +16,19 @@ class QueryBuilder
         $this->queryFactory = new QueryFactory('mysql');
     }
 
+    public function getOne($table, $id)
+    {
+        $select = $this->queryFactory->newSelect();
+        $select->cols(['*'])
+            ->from($table)
+            ->where('id = :id', ['id' => $id]);
+
+        $sth = $this->pdo->prepare($select->getStatement());
+        $sth->execute($select->getBindValues());
+
+        return $sth->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function getAll($table1, $table2): bool|array
     {
         $select = $this->queryFactory->newSelect();
@@ -42,5 +55,19 @@ class QueryBuilder
         $sth->execute($insert->getBindValues());
 
         return $this->pdo->lastInsertId();
+    }
+
+    public function update($table, $id, $data)
+    {
+        $update = $this->queryFactory->newUpdate();
+
+        $update
+            ->table($table)
+            ->cols($data)
+            ->where('id = :id')
+            ->bindValue('id', $id);
+
+        $sth = $this->pdo->prepare($update->getStatement());
+        $sth->execute($update->getBindValues());
     }
 }

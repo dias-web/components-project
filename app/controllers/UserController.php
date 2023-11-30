@@ -2,13 +2,9 @@
 
 namespace App\controllers;
 
-use App\models\AvatarUploader;
 use App\models\QueryBuilder;
+use App\models\User;
 use Delight\Auth\Auth;
-use Delight\Auth\InvalidEmailException;
-use Delight\Auth\InvalidPasswordException;
-use Delight\Auth\TooManyRequestsException;
-use Delight\Auth\UserAlreadyExistsException;
 use League\Plates\Engine;
 use function Tamtamchik\SimpleFlash\flash;
 
@@ -35,18 +31,6 @@ class UserController
         }
     }
 
-    public function showEditPage()
-    {
-        if (!$this->auth->isLoggedIn()) {
-            flash()->error('Требуется авторизация!');
-            header('Location: /login');
-            die();
-        } else {
-            $templates = new Engine('../app/views');
-            echo $templates->render('edit', ['auth' => $this->auth]);
-        }
-    }
-
     public function showCreatePage()
     {
         if (!$this->auth->isLoggedIn()) {
@@ -59,54 +43,44 @@ class UserController
         }
     }
 
-    public function createNewUser()
+    public function showProfilePage($id)
     {
-        try {
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-            $username = $_POST['username'];
-            $phone = $_POST['phone'];
-            $job = $_POST['job'];
-            $address = $_POST['address'];
-            $status = $_POST['status'];
-            $vk = $_POST['vk'];
-            $tg = $_POST['tg'];
-            $insta = $_POST['insta'];
+        global $container;
 
-            $userId = $this->auth->register($email, $password, $username);
-
-            if (isset($_FILES['image'])) {
-                $avatarUploader = new AvatarUploader();
-                $avatarFilename = $avatarUploader->upload($_FILES['image']);
-
-                $this->queryBuilder->insert('users_profile', [
-                    'user_id' => $userId,
-                    'job' => $job,
-                    'phone' => $phone,
-                    'address' => $address,
-                    'status' => $status,
-                    'vk' => $vk,
-                    'tg' => $tg,
-                    'insta' => $insta,
-                    'avatar' => $avatarFilename
-                ]);
-            }
-
-            flash()->success('Пользователь успешно добавлен!');
+        if (!$this->auth->hasRole(\Delight\Auth\Role::ADMIN) && $this->auth->getUserId() != $id) {
+            flash()->error('Недостаточно прав для просмотра!');
             header('Location: /');
             exit();
-        } catch (InvalidEmailException) {
-            flash()->error('Неверный формат адреса электронной почты.');
-        } catch (InvalidPasswordException) {
-            flash()->error('Неверный пароль.');
-        } catch (UserAlreadyExistsException) {
-            flash()->error('Такой пользователь уже существует!');
-        } catch (TooManyRequestsException) {
-            flash()->error('Слишком много запросов. Пожалуйста, повторите попытку позже.');
-        } catch (\Exception $e) {
-            flash()->error('Ошибка при загрузке файла: ' . $e->getMessage());
         }
-        header('Location: /create');
-        exit();
+
+        try {
+            $qb = $container->get(QueryBuilder::class);
+            $user = $qb->getOne('users_profile', $id);
+        } catch (\DI\DependencyException $e) {
+        } catch (\DI\NotFoundException $e) {
+        }
+
+        if (!$this->auth->isLoggedIn()) {
+            flash()->error('Требуется авторизация!');
+            header('Location: /login');
+            die();
+        } else {
+            $templates = new Engine('../app/views');
+            echo $templates->render('profile', ['user' => $user]);
+        }
+    }
+
+    public function createNewUser()
+    {
+        $userModel = new User($this->auth, $this->queryBuilder);
+        $result = $userModel->createNewUser($_POST, $_FILES);
+
+        if ($result) {
+            header('Location: /');
+            exit();
+        } else {
+            header('Location: /create');
+            exit();
+        }
     }
 }

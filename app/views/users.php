@@ -26,6 +26,7 @@ $currentUserId = $auth->getUserId();
 
 <main id="js-page-content" role="main" class="page-content mt-3">
     <?= flash()->display('success') ?? '' ?>
+    <?= flash()->display('error') ?? '' ?>
     <div class="subheader">
         <h1 class="subheader-title">
             <i class='subheader-icon fal fa-users'></i> Список пользователей
@@ -58,9 +59,9 @@ $currentUserId = $auth->getUserId();
                      data-filter-tags="<?= $user['username'] ?>">
                     <div class="card-body border-faded border-top-0 border-left-0 border-right-0 rounded-top">
                         <div class="d-flex flex-row align-items-center">
-                                <span class="status status-<?php if($user['status'] === 'online') {
+                                <span class="status status-<?php if ($user['status'] == 'online') {
                                     echo 'success';
-                                } elseif ($user['status'] === 'away') {
+                                } elseif ($user['status'] == 'away') {
                                     echo 'warning';
                                 } else {
                                     echo 'danger';
@@ -70,36 +71,36 @@ $currentUserId = $auth->getUserId();
                                           style="background-image:url('/uploads/<?= $user['avatar'] ?>'); background-size: cover;"></span>
                                 </span>
                             <div class="info-card-text flex-1">
-                                <a href="javascript:void(0);" class="fs-xl text-truncate text-truncate-lg text-info"
-                                   data-toggle="dropdown" aria-expanded="false">
+                                <a href="/profile/<?= $user['id'] ?>" class="fs-xl text-truncate text-truncate-lg text-info"
+                                    aria-expanded="false">
                                     <?= $user['username'] ?>
                                     <?php if ($auth->hasRole(\Delight\Auth\Role::ADMIN)
                                         || $currentUserId == $user['id']): ?>
-                                    <i class="fal fas fa-cog fa-fw d-inline-block ml-1 fs-md"></i>
-                                    <i class="fal fa-angle-down d-inline-block ml-1 fs-md"></i>
+                                        <i class="fal fas fa-cog fa-fw d-inline-block ml-1 fs-md"></i>
+                                        <i class="fal fa-angle-down d-inline-block ml-1 fs-md"></i>
                                     <?php endif; ?>
                                 </a>
                                 <?php if ($auth->hasRole(\Delight\Auth\Role::ADMIN)
                                     || $currentUserId == $user['id']): ?>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/edit/<?= $user['id']?>">
-                                        <i class="fa fa-edit"></i>
-                                        Редактировать</a>
-                                    <a class="dropdown-item" href="security.html">
-                                        <i class="fa fa-lock"></i>
-                                        Безопасность</a>
-                                    <a class="dropdown-item" href="status.html">
-                                        <i class="fa fa-sun"></i>
-                                        Установить статус</a>
-                                    <a class="dropdown-item" href="media.html">
-                                        <i class="fa fa-camera"></i>
-                                        Загрузить аватар
-                                    </a>
-                                    <a href="#" class="dropdown-item" onclick="return confirm('are you sure?');">
-                                        <i class="fa fa-window-close"></i>
-                                        Удалить
-                                    </a>
-                                </div>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="/edit/<?= $user['id'] ?>">
+                                            <i class="fa fa-edit"></i>
+                                            Редактировать</a>
+                                        <a class="dropdown-item" href="security.html">
+                                            <i class="fa fa-lock"></i>
+                                            Безопасность</a>
+                                        <a class="dropdown-item" href="status.html">
+                                            <i class="fa fa-sun"></i>
+                                            Установить статус</a>
+                                        <a class="dropdown-item" href="media.html">
+                                            <i class="fa fa-camera"></i>
+                                            Загрузить аватар
+                                        </a>
+                                        <a href="#" class="dropdown-item" onclick="return confirm('are you sure?');">
+                                            <i class="fa fa-window-close"></i>
+                                            Удалить
+                                        </a>
+                                    </div>
                                 <?php endif; ?>
                                 <span class="text-truncate text-truncate-xl"><?= $user['job'] ?></span>
                             </div>
