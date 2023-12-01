@@ -1,5 +1,15 @@
-<?php $this->layout('layout') ?>
+<?php
+$this->layout('layout');
+
+if (!session_id()) {
+    session_start();
+}
+
+use function Tamtamchik\SimpleFlash\flash;
+?>
 <main id="js-page-content" role="main" class="page-content mt-3">
+    <?= flash()->display('success') ?? '' ?>
+    <?= flash()->display('error') ?? '' ?>
     <div class="subheader">
         <h1 class="subheader-title">
             <i class='subheader-icon fal fa-user'></i> <?= $user['username'] ?>

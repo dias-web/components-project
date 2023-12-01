@@ -44,6 +44,13 @@ $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
     $r->addRoute('GET', '/edit/{id:\d+}', ['App\controllers\EditController', 'showEditPage']);
     $r->addRoute('POST', '/edit/{id:\d+}', ['App\controllers\EditController', 'editUser']);
     $r->addRoute('GET', '/profile/{id:\d+}', ['App\controllers\UserController', 'showProfilePage']);
+    $r->addRoute('GET', '/security/{id:\d+}', ['App\controllers\SecurityController', 'showSecurityPage']);
+    $r->addRoute('POST', '/security/{id:\d+}', ['App\controllers\SecurityController', 'editSecurityInfoOfUser']);
+    $r->addRoute('GET', '/status/{id:\d+}', ['App\controllers\StatusController', 'showStatusPage']);
+    $r->addRoute('POST', '/status/{id:\d+}', ['App\controllers\StatusController', 'editStatus']);
+    $r->addRoute('GET', '/media/{id:\d+}', ['App\controllers\MediaController', 'showMediaPage']);
+    $r->addRoute('POST', '/media/{id:\d+}', ['App\controllers\MediaController', 'editAvatar']);
+    $r->addRoute('GET', '/delete/{id:\d+}', ['App\controllers\UserController', 'deleteUser']);
 
 });
 

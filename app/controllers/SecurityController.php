@@ -7,7 +7,7 @@ use Delight\Auth\Auth;
 use League\Plates\Engine;
 use function Tamtamchik\SimpleFlash\flash;
 
-class EditController
+class SecurityController
 {
     private $auth;
     private $queryBuilder;
@@ -18,7 +18,7 @@ class EditController
         $this->queryBuilder = $queryBuilder;
     }
 
-    public function showEditPage($id)
+    public function showSecurityPage($id)
     {
         global $container;
 
@@ -43,38 +43,35 @@ class EditController
             die();
         } else {
             $templates = new Engine('../app/views');
-            echo $templates->render('edit', ['user' => $user]);
+            echo $templates->render('security', ['user' => $user]);
         }
     }
 
-    public function editUser($id)
+    public function editSecurityInfoOfUser($id)
     {
-        if (!$this->auth->isLoggedIn()) {
-            flash()->error('Требуется авторизация!');
-            header('Location: /login');
-            exit();
-        }
-
-        if (!$this->auth->hasRole(\Delight\Auth\Role::ADMIN) && $this->auth->getUserId() != $id) {
-            flash()->error('Недостаточно прав для редактирования!');
-            header('Location: /');
-            exit();
-        }
-
         try {
-            $this->queryBuilder->update('users_profile', $id, [
-                'username' => $_POST['username'],
-                'job' => $_POST['job'],
-                'phone' => $_POST['phone'],
-                'address' => $_POST['address']
-            ]);
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+            $repeatPassword = $_POST['repeat-password'];
 
-            flash()->success('Информация пользователя успешно обновлена!');
+            if ($password !== $repeatPassword) {
+                throw new \Exception('Пароли не совпадают!');
+            }
+
+            if ($email !== '' && $password !== '') {
+                $this->queryBuilder->update('users', $id, [
+                    'email' => $_POST['email'],
+                    'password' => password_hash($_POST['password'], PASSWORD_DEFAULT)
+                ]);
+            }
+
+            flash()->success('Данные безопасности обновлены!');
         } catch (\Exception $e) {
-            flash()->error('Ошибка при обновлении: ' . $e->getMessage());
+            flash()->error('Ошибка: ' . $e->getMessage());
         }
 
-        header('Location: /edit/' . $id);
+        header('Location: /security/' . $id);
         exit();
     }
+
 }

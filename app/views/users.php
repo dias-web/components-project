@@ -37,6 +37,7 @@ $currentUserId = $auth->getUserId();
             <?php if ($auth->hasRole(\Delight\Auth\Role::ADMIN)): ?>
                 <a class="btn btn-success" href="/create">Добавить</a>
             <?php endif; ?>
+            <a class="btn btn-info ml-3" href="/profile/<?= $currentUserId ?>">Профиль пользователя</a>
             <div class="border-faded bg-faded p-3 mb-g d-flex mt-3">
                 <input type="text" id="js-filter-contacts" name="filter-contacts"
                        class="form-control shadow-inset-2 form-control-lg" placeholder="Найти пользователя">
@@ -71,8 +72,8 @@ $currentUserId = $auth->getUserId();
                                           style="background-image:url('/uploads/<?= $user['avatar'] ?>'); background-size: cover;"></span>
                                 </span>
                             <div class="info-card-text flex-1">
-                                <a href="/profile/<?= $user['id'] ?>" class="fs-xl text-truncate text-truncate-lg text-info"
-                                    aria-expanded="false">
+                                <a href="#" class="fs-xl text-truncate text-truncate-lg text-info"
+                                   data-toggle="dropdown" aria-expanded="false">
                                     <?= $user['username'] ?>
                                     <?php if ($auth->hasRole(\Delight\Auth\Role::ADMIN)
                                         || $currentUserId == $user['id']): ?>
@@ -86,17 +87,17 @@ $currentUserId = $auth->getUserId();
                                         <a class="dropdown-item" href="/edit/<?= $user['id'] ?>">
                                             <i class="fa fa-edit"></i>
                                             Редактировать</a>
-                                        <a class="dropdown-item" href="security.html">
+                                        <a class="dropdown-item" href="/security/<?= $user['id'] ?>">
                                             <i class="fa fa-lock"></i>
                                             Безопасность</a>
-                                        <a class="dropdown-item" href="status.html">
+                                        <a class="dropdown-item" href="/status/<?= $user['id'] ?>">
                                             <i class="fa fa-sun"></i>
                                             Установить статус</a>
-                                        <a class="dropdown-item" href="media.html">
+                                        <a class="dropdown-item" href="/media/<?= $user['id'] ?>">
                                             <i class="fa fa-camera"></i>
                                             Загрузить аватар
                                         </a>
-                                        <a href="#" class="dropdown-item" onclick="return confirm('are you sure?');">
+                                        <a href="/delete/<?= $user['id'] ?>" class="dropdown-item" onclick="return confirm('are you sure?');">
                                             <i class="fa fa-window-close"></i>
                                             Удалить
                                         </a>

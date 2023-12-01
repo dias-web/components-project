@@ -16,12 +16,17 @@ class QueryBuilder
         $this->queryFactory = new QueryFactory('mysql');
     }
 
-    public function getOne($table, $id)
+    public function getOne($table1, $table2, $id)
     {
         $select = $this->queryFactory->newSelect();
         $select->cols(['*'])
-            ->from($table)
-            ->where('id = :id', ['id' => $id]);
+        ->from($table1)
+            ->join(
+                'LEFT',
+                $table2,
+                "{$table1}.id = {$table2}.user_id"
+            )
+            ->where("{$table1}.id = :id", ['id' => $id]);
 
         $sth = $this->pdo->prepare($select->getStatement());
         $sth->execute($select->getBindValues());

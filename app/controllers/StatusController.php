@@ -7,7 +7,7 @@ use Delight\Auth\Auth;
 use League\Plates\Engine;
 use function Tamtamchik\SimpleFlash\flash;
 
-class EditController
+class StatusController
 {
     private $auth;
     private $queryBuilder;
@@ -18,7 +18,7 @@ class EditController
         $this->queryBuilder = $queryBuilder;
     }
 
-    public function showEditPage($id)
+    public function showStatusPage($id)
     {
         global $container;
 
@@ -43,38 +43,30 @@ class EditController
             die();
         } else {
             $templates = new Engine('../app/views');
-            echo $templates->render('edit', ['user' => $user]);
+            echo $templates->render('status', ['user' => $user]);
         }
     }
 
-    public function editUser($id)
+    public function editStatus($id)
     {
-        if (!$this->auth->isLoggedIn()) {
-            flash()->error('Требуется авторизация!');
-            header('Location: /login');
-            exit();
-        }
-
-        if (!$this->auth->hasRole(\Delight\Auth\Role::ADMIN) && $this->auth->getUserId() != $id) {
-            flash()->error('Недостаточно прав для редактирования!');
-            header('Location: /');
-            exit();
-        }
-
         try {
-            $this->queryBuilder->update('users_profile', $id, [
-                'username' => $_POST['username'],
-                'job' => $_POST['job'],
-                'phone' => $_POST['phone'],
-                'address' => $_POST['address']
-            ]);
+            $status = $_POST['status'];
 
-            flash()->success('Информация пользователя успешно обновлена!');
+            if ($status !== '') {
+                $this->queryBuilder->update('users_profile', $id, [
+                    'status' => $status,
+                ]);
+            }
+
+            flash()->success('Статус обновлен!');
         } catch (\Exception $e) {
-            flash()->error('Ошибка при обновлении: ' . $e->getMessage());
+            flash()->error('Ошибка: ' . $e->getMessage());
         }
 
-        header('Location: /edit/' . $id);
+        header('Location: /');
         exit();
     }
+
+
+
 }

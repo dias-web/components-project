@@ -55,7 +55,7 @@ class UserController
 
         try {
             $qb = $container->get(QueryBuilder::class);
-            $user = $qb->getOne('users_profile', $id);
+            $user = $qb->getOne('users', 'users_profile', $id);
         } catch (\DI\DependencyException $e) {
         } catch (\DI\NotFoundException $e) {
         }
@@ -82,5 +82,25 @@ class UserController
             header('Location: /create');
             exit();
         }
+    }
+
+    public function deleteUser($id)
+    {
+        try {
+            $this->auth->admin()->deleteUserById($id);
+
+            flash()->success('Пользователь успешно удален!');
+
+        }
+        catch (\Delight\Auth\UnknownIdException $e) {
+            flash()->error('Ошибка! Неверный id : ' . $e->getMessage());
+            die();
+        }
+
+        if($this->auth->getUserId() === (int)$id) {
+            $this->auth->logout();
+        }
+
+        header('Location: /');
     }
 }

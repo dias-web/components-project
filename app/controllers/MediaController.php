@@ -2,12 +2,13 @@
 
 namespace App\controllers;
 
+use App\models\AvatarUploader;
 use App\models\QueryBuilder;
 use Delight\Auth\Auth;
 use League\Plates\Engine;
 use function Tamtamchik\SimpleFlash\flash;
 
-class EditController
+class MediaController
 {
     private $auth;
     private $queryBuilder;
@@ -18,7 +19,7 @@ class EditController
         $this->queryBuilder = $queryBuilder;
     }
 
-    public function showEditPage($id)
+    public function showMediaPage($id)
     {
         global $container;
 
@@ -43,38 +44,39 @@ class EditController
             die();
         } else {
             $templates = new Engine('../app/views');
-            echo $templates->render('edit', ['user' => $user]);
+            echo $templates->render('media', ['user' => $user]);
         }
     }
 
-    public function editUser($id)
+    public function editAvatar($id)
     {
-        if (!$this->auth->isLoggedIn()) {
-            flash()->error('Требуется авторизация!');
-            header('Location: /login');
-            exit();
-        }
-
-        if (!$this->auth->hasRole(\Delight\Auth\Role::ADMIN) && $this->auth->getUserId() != $id) {
-            flash()->error('Недостаточно прав для редактирования!');
-            header('Location: /');
-            exit();
-        }
-
         try {
-            $this->queryBuilder->update('users_profile', $id, [
-                'username' => $_POST['username'],
-                'job' => $_POST['job'],
-                'phone' => $_POST['phone'],
-                'address' => $_POST['address']
-            ]);
+            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === UPLOAD_ERR_OK) {
+                $avatarUploader = new AvatarUploader();
 
-            flash()->success('Информация пользователя успешно обновлена!');
+                $userData = $this->queryBuilder->getOne('users', 'users_profile', $id);
+                $currentAvatar = $userData['avatar'] ?? null;
+
+                $avatarFilename = $avatarUploader->upload($_FILES['avatar']);
+
+                $this->queryBuilder->update('users_profile', $id, [
+                    'avatar' => $avatarFilename
+                ]);
+
+                if ($currentAvatar && file_exists('uploads/' . $currentAvatar)) {
+                    unlink('uploads/' . $currentAvatar);
+                }
+
+                flash()->success('Аватар успешно обновлен!');
+            } else {
+                throw new \Exception('Файл не загружен или произошла ошибка при загрузке.');
+            }
         } catch (\Exception $e) {
-            flash()->error('Ошибка при обновлении: ' . $e->getMessage());
+            flash()->error('Ошибка при загрузке файла: ' . $e->getMessage());
         }
 
-        header('Location: /edit/' . $id);
+        header('Location: /media/'.$id);
         exit();
     }
+
 }
