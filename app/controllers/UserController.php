@@ -5,6 +5,8 @@ namespace App\controllers;
 use App\models\QueryBuilder;
 use App\models\User;
 use Delight\Auth\Auth;
+use Delight\Auth\Role;
+use Delight\Auth\UnknownIdException;
 use League\Plates\Engine;
 use function Tamtamchik\SimpleFlash\flash;
 
@@ -47,7 +49,7 @@ class UserController
     {
         global $container;
 
-        if (!$this->auth->hasRole(\Delight\Auth\Role::ADMIN) && $this->auth->getUserId() != $id) {
+        if (!$this->auth->hasRole(Role::ADMIN) && $this->auth->getUserId() != $id) {
             flash()->error('Недостаточно прав для просмотра!');
             header('Location: /');
             exit();
@@ -87,9 +89,17 @@ class UserController
     public function deleteUser($id)
     {
         try {
-            if ($this->auth->hasRole(\Delight\Auth\Role::ADMIN) || $this->auth->getUserId() == $id) {
+            if ($this->auth->hasRole(Role::ADMIN) || $this->auth->getUserId() == $id) {
+
+                $userData = $this->queryBuilder->getOne('users', 'users_profile', $id);
+                $currentAvatar = $userData['avatar'] ?? null;
+
                 $this->auth->admin()->deleteUserById($id);
                 flash()->success('Пользователь успешно удален!');
+
+                if ($currentAvatar && file_exists('uploads/' . $currentAvatar)) {
+                    unlink('uploads/' . $currentAvatar);
+                }
 
                 if ($this->auth->getUserId() == $id) {
                     $this->auth->logout();
@@ -100,11 +110,11 @@ class UserController
                 flash()->error('Недостаточно прав для выполнения этой операции!');
             }
         }
-        catch (\Delight\Auth\UnknownIdException $e) {
+        catch (UnknownIdException $e) {
             flash()->error('Ошибка! Неверный id: ' . $e->getMessage());
         }
-
         header('Location: /');
         exit();
     }
+
 }

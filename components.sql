@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Ноя 28 2023 г., 08:00
+-- Время создания: Дек 04 2023 г., 10:52
 -- Версия сервера: 8.0.30
 -- Версия PHP: 8.0.22
 
@@ -46,7 +46,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `username`, `status`, `verified`, `resettable`, `roles_mask`, `registered`, `last_login`, `force_logout`) VALUES
-(13, 'qwerty@mail.ru', '$2y$10$SafDMrX2PHTxhFlp2IFfKexB8c86BehDp27DcqvhNYgYH5rWaLXVq', NULL, 0, 1, 1, 1, 1701145272, 1701147428, 0);
+(1, 'qwerty@mail.ru', '$2y$10$acH/zB4vyIhPpb3Pg3UYVuxr6tDLEyC4B64oPXjZzH/WLWqei83oK', NULL, 0, 1, 1, 1, 1701669465, 1701669554, 0);
 
 -- --------------------------------------------------------
 
@@ -72,15 +72,23 @@ CREATE TABLE `users_confirmations` (
 CREATE TABLE `users_profile` (
   `id` int NOT NULL,
   `user_id` int NOT NULL,
-  `job` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `vk` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `tg` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `insta` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
+  `username` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `job` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `address` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `vk` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `tg` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `insta` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `avatar` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `users_profile`
+--
+
+INSERT INTO `users_profile` (`id`, `user_id`, `username`, `job`, `phone`, `address`, `status`, `vk`, `tg`, `insta`, `avatar`) VALUES
+(1, 1, 'Dias Ilkenov', 'SlonWorks web-studio, programmer', '77088268340', 'Almaty, Baitursynova 101', 'away', NULL, NULL, NULL, '656d6ad46ca07.png');
 
 -- --------------------------------------------------------
 
@@ -128,11 +136,8 @@ CREATE TABLE `users_throttling` (
 --
 
 INSERT INTO `users_throttling` (`bucket`, `tokens`, `replenished_at`, `expires_at`) VALUES
-('QduM75nGblH2CDKFyk0QeukPOwuEVDAUFE54ITnHM38', 64.5436, 1701147461, 1701687461),
-('PZ3qJtO_NLbJfRIP-8b4ME4WA3xxc6n9nbCORSffyQ0', 0.0679849, 1701145272, 1701577272),
-('OMhkmdh1HUEdNPRi-Pe4279tbL5SQ-WMYf551VVvH8U', 19, 1701147422, 1701183422),
-('VoxH0WdO30V-LhOgu1O60WCF3_vnLDESNMu5qyj8ELI', 499, 1701147422, 1701320222),
-('7pkx4vt8JT065QrFCsvvtOiGhxRKUBsUetfLe1FKFZo', 498.04, 1701074262, 1701247062);
+('QduM75nGblH2CDKFyk0QeukPOwuEVDAUFE54ITnHM38', 71.8822, 1701676241, 1702216241),
+('PZ3qJtO_NLbJfRIP-8b4ME4WA3xxc6n9nbCORSffyQ0', 2.15685, 1701676241, 1702108241);
 
 --
 -- Индексы сохранённых таблиц
@@ -191,7 +196,7 @@ ALTER TABLE `users_throttling`
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `users_confirmations`
@@ -203,7 +208,7 @@ ALTER TABLE `users_confirmations`
 -- AUTO_INCREMENT для таблицы `users_profile`
 --
 ALTER TABLE `users_profile`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `users_remembered`
