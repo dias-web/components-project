@@ -87,20 +87,24 @@ class UserController
     public function deleteUser($id)
     {
         try {
-            $this->auth->admin()->deleteUserById($id);
+            if ($this->auth->hasRole(\Delight\Auth\Role::ADMIN) || $this->auth->getUserId() == $id) {
+                $this->auth->admin()->deleteUserById($id);
+                flash()->success('Пользователь успешно удален!');
 
-            flash()->success('Пользователь успешно удален!');
-
+                if ($this->auth->getUserId() == $id) {
+                    $this->auth->logout();
+                    header('Location: /login');
+                    exit();
+                }
+            } else {
+                flash()->error('Недостаточно прав для выполнения этой операции!');
+            }
         }
         catch (\Delight\Auth\UnknownIdException $e) {
-            flash()->error('Ошибка! Неверный id : ' . $e->getMessage());
-            die();
-        }
-
-        if($this->auth->getUserId() === (int)$id) {
-            $this->auth->logout();
+            flash()->error('Ошибка! Неверный id: ' . $e->getMessage());
         }
 
         header('Location: /');
+        exit();
     }
 }
